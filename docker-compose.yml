@@ -1,0 +1,24 @@
+services:
+  auth-server:
+    build: ./auth-server
+    container_name: flawedtoken-auth
+    ports:
+      - "${AUTH_SERVER_PORT:-8001}:8001"
+    env_file: .env
+    networks:
+      - flawedtoken
+
+  client-app:
+    build: ./client-app
+    container_name: flawedtoken-client
+    ports:
+      - "${CLIENT_APP_PORT:-8000}:8000"
+    env_file: .env
+    depends_on:
+      - auth-server
+    networks:
+      - flawedtoken
+
+networks:
+  flawedtoken:
+    driver: bridge
