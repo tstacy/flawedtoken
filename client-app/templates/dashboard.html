@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlawedToken — Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; background: #0d0d0f; font-family: 'Courier New', monospace;
+           color: #e2e2e2; padding: 2rem; }
+    .header { display: flex; justify-content: space-between; align-items: center;
+              border-bottom: 1px solid #1e1e22; padding-bottom: 1rem; margin-bottom: 2rem; }
+    .logo { font-size: 0.65rem; letter-spacing: 0.25em; color: #e05c2a; text-transform: uppercase; }
+    .logout { font-size: 0.7rem; color: #666; text-decoration: none; }
+    .logout:hover { color: #e05c2a; }
+    h1 { font-size: 1rem; font-weight: 400; margin-bottom: 1.5rem; }
+    .section { border: 1px solid #1e1e22; background: #111114; padding: 1.2rem; margin-bottom: 1rem; }
+    .section-label { font-size: 0.6rem; letter-spacing: 0.2em; color: #e05c2a;
+                     text-transform: uppercase; margin-bottom: 0.8rem; }
+    .row { display: flex; justify-content: space-between; font-size: 0.78rem;
+           padding: 0.3rem 0; border-bottom: 1px solid #1a1a1e; }
+    .row:last-child { border-bottom: none; }
+    .row .key { color: #666; }
+    .token-block { font-size: 0.7rem; color: #888; word-break: break-all; line-height: 1.6; margin-top: 0.4rem; }
+    .attack-note { margin-top: 2rem; border: 1px solid #e05c2a33; padding: 1rem;
+                   font-size: 0.75rem; color: #888; line-height: 1.6; }
+    .attack-note strong { color: #e05c2a; }
+    .attack-note a { color: #e05c2a; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">FlawedToken · Dashboard</div>
+    <a href="/logout" class="logout">Logout</a>
+  </div>
+  <h1>Authentication successful.</h1>
+  <div class="section">
+    <div class="section-label">User Info</div>
+    <div class="row"><span class="key">username</span><span>{{ user.username }}</span></div>
+    <div class="row"><span class="key">name</span><span>{{ user.name }}</span></div>
+    <div class="row"><span class="key">email</span><span>{{ user.email }}</span></div>
+  </div>
+  <div class="section">
+    <div class="section-label">Access Token</div>
+    <div class="token-block">{{ access_token }}</div>
+  </div>
+  <div class="attack-note">
+    <strong>Attack surface note:</strong> This token was issued after an OAuth 2.0 auth code exchange.
+    With <strong>FLAW_CODE_INTERCEPTION=on</strong>, an attacker who intercepts the authorization code
+    before this callback fires can exchange it themselves and receive this token first.
+    See <a href="https://github.com/tstacy/flawedtoken/blob/main/docs/flaw-01-auth-code-interception.md" target="_blank">Flaw 01 walkthrough</a>
+    or <a href="https://shroudcloud.com" target="_blank">ShroudCloud</a> to automate this against an authorized target.
+  </div>
+</body>
+</html>

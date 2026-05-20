@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlawedToken — Demo App</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center;
+           background: #0d0d0f; font-family: 'Courier New', monospace; color: #e2e2e2; }
+    .card { width: 420px; border: 1px solid #2a2a2e; background: #111114; padding: 2.5rem; }
+    .logo { font-size: 0.65rem; letter-spacing: 0.25em; color: #e05c2a; text-transform: uppercase; margin-bottom: 1rem; }
+    h1 { font-size: 1.4rem; font-weight: 400; margin-bottom: 0.4rem; }
+    .subtitle { font-size: 0.8rem; color: #666; margin-bottom: 2rem; line-height: 1.5; }
+    .btn { display: inline-block; padding: 0.7rem 1.4rem; background: #e05c2a; color: #fff;
+           text-decoration: none; font-family: inherit; font-size: 0.8rem;
+           letter-spacing: 0.08em; text-transform: uppercase; }
+    .btn:hover { background: #c94e20; }
+    .flaw-list { margin-top: 2rem; border-top: 1px solid #1e1e22; padding-top: 1.2rem; }
+    .flaw-list p { font-size: 0.65rem; letter-spacing: 0.12em; color: #444;
+                   text-transform: uppercase; margin-bottom: 0.6rem; }
+    .flaw-item { display: flex; justify-content: space-between; font-size: 0.75rem;
+                 color: #888; padding: 0.3rem 0; border-bottom: 1px solid #1a1a1e; }
+    .flaw-item:last-child { border-bottom: none; }
+    .on { color: #e05c2a; }
+    .links { margin-top: 1.5rem; font-size: 0.7rem; color: #444; }
+    .links a { color: #666; text-decoration: none; }
+    .links a:hover { color: #e05c2a; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">FlawedToken · Client App</div>
+    <h1>Intentionally Broken.</h1>
+    <p class="subtitle">
+      A vulnerable OAuth 2.0 client for practicing auth attack flows.<br>
+      Every misconfiguration is deliberate, documented, and toggleable.
+    </p>
+    {% if user %}
+      <p style="font-size:0.8rem; color:#888; margin-bottom:1rem;">
+        Signed in as <strong style="color:#e2e2e2;">{{ user.name or user.username }}</strong>
+      </p>
+      <a href="/dashboard" class="btn">Dashboard</a>
+      &nbsp;
+      <a href="/logout" style="font-size:0.75rem; color:#666; text-decoration:none; margin-left:0.5rem;">Logout</a>
+    {% else %}
+      <a href="/login" class="btn">Login via OAuth</a>
+    {% endif %}
+    <div class="flaw-list">
+      <p>Active Flaws</p>
+      <div class="flaw-item"><span>Auth Code Interception</span><span class="on">ON</span></div>
+      <div class="flaw-item"><span>Redirect URI Validation</span><span class="on">ON</span></div>
+    </div>
+    <div class="links">
+      <a href="http://localhost:8001/debug/flaws" target="_blank">Auth Server Flaw Status</a>
+      &nbsp;·&nbsp;
+      <a href="https://cctbp.com" target="_blank">cctbp.com</a>
+      &nbsp;·&nbsp;
+      <a href="https://shroudcloud.com" target="_blank">ShroudCloud</a>
+    </div>
+  </div>
+</body>
+</html>

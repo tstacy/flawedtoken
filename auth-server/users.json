@@ -1,0 +1,14 @@
+[
+  {
+    "username": "alice",
+    "password": "password",
+    "name": "Alice Example",
+    "email": "alice@flawedtoken.local"
+  },
+  {
+    "username": "bob",
+    "password": "password",
+    "name": "Bob Example",
+    "email": "bob@flawedtoken.local"
+  }
+]

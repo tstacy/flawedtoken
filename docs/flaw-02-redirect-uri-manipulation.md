@@ -55,14 +55,22 @@ paths not registered for the client.
    http://localhost:8001/authorize?response_type=code&client_id=flawedtoken-client&redirect_uri=http://localhost:9000/capture&state=ATTACKSTATE
    ```
 
-3. Open the URL in a browser and approve the request
+3. Open the URL in a browser and log in with any user from `users.json`
 
 4. The auth server redirects the authorization code to your listener:
    ```
    GET /capture?code=AUTH_CODE_HERE&state=ATTACKSTATE
    ```
 
-5. Exchange the code as in Flaw 01
+5. Exchange the code:
+   ```bash
+   curl -X POST http://localhost:8001/token \
+     -d "grant_type=authorization_code" \
+     -d "code=AUTH_CODE_HERE" \
+     -d "redirect_uri=http://localhost:9000/capture" \
+     -d "client_id=flawedtoken-client" \
+     -d "client_secret=flawedtoken-secret"
+   ```
 
 ### Attack 2 — Subdomain Confusion
 
@@ -105,6 +113,25 @@ Signs of redirect URI manipulation in your logs:
 - Requests where the redirect URI domain does not match the registered client domain
 - Multiple authorization requests in quick succession with varying redirect URIs
   from the same session (enumeration behavior)
+
+---
+
+## Debug Endpoint — Lab Only
+
+FlawedToken ships a `/debug/flaws` endpoint on the auth server that exposes
+active flaw state, pending code counts, and live token counts:
+
+```
+http://localhost:8001/debug/flaws
+```
+
+This endpoint exists to support attack walkthroughs and confirm flaw state
+without reading environment variables directly. **It must not exist on any
+production authorization server.** Exposing internal token counts, flaw
+configuration, or server state to unauthenticated HTTP requests is itself a
+misconfiguration — one that aids enumeration and reconnaissance. Any real AS
+you build or configure should have no equivalent endpoint, or must gate it
+behind authenticated admin access with rate limiting and audit logging.
 
 ---
 

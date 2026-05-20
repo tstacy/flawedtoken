@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlawedToken — Error</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center;
+           background: #0d0d0f; font-family: 'Courier New', monospace; color: #e2e2e2; }
+    .card { width: 420px; border: 1px solid #e05c2a44; background: #111114; padding: 2rem; }
+    .logo { font-size: 0.65rem; letter-spacing: 0.25em; color: #e05c2a;
+            text-transform: uppercase; margin-bottom: 1.2rem; }
+    h1 { font-size: 1rem; font-weight: 400; color: #e05c2a; margin-bottom: 0.6rem; }
+    .detail { font-size: 0.78rem; color: #888; margin-bottom: 1.5rem; line-height: 1.5; }
+    a { color: #e05c2a; text-decoration: none; font-size: 0.75rem; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">FlawedToken · Error</div>
+    <h1>{{ error }}</h1>
+    {% if detail %}<p class="detail">{{ detail }}</p>{% endif %}
+    <a href="/">← Back to login</a>
+  </div>
+</body>
+</html>

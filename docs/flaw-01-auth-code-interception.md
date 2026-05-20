@@ -64,7 +64,8 @@ before the legitimate client does.
      -d "grant_type=authorization_code" \
      -d "code=AUTH_CODE_HERE" \
      -d "redirect_uri=http://localhost:8000/callback" \
-     -d "client_id=flawedtoken-client"
+     -d "client_id=flawedtoken-client" \
+     -d "client_secret=flawedtoken-secret"
    ```
 
 7. The auth server issues an access token to your request. The legitimate
@@ -96,6 +97,25 @@ Signs of authorization code interception in your logs:
   client arriving after the attacker)
 - Authorization codes appearing in server-side logs or Referer headers
 - Unusual user-agent strings on token exchange requests vs authorization requests
+
+---
+
+## Debug Endpoint — Lab Only
+
+FlawedToken ships a `/debug/flaws` endpoint on the auth server that exposes
+active flaw state, pending code counts, and live token counts:
+
+```
+http://localhost:8001/debug/flaws
+```
+
+This endpoint exists to support attack walkthroughs and confirm flaw state
+without reading environment variables directly. **It must not exist on any
+production authorization server.** Exposing internal token counts, flaw
+configuration, or server state to unauthenticated HTTP requests is itself a
+misconfiguration — one that aids enumeration and reconnaissance. Any real AS
+you build or configure should have no equivalent endpoint, or must gate it
+behind authenticated admin access with rate limiting and audit logging.
 
 ---
 
