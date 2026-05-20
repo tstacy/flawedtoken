@@ -20,6 +20,9 @@ Both services run together via Docker Compose. One command and the full
 environment is up.
 
 ---
+<img width="452" height="493" alt="FlawedToken" src="https://github.com/user-attachments/assets/4bc5165d-8843-4e72-9a90-50c4de6dc2fb" />
+
+---
 
 ## Quickstart
 
