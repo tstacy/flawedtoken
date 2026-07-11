@@ -11,24 +11,32 @@ When a user authenticates via OAuth 2.0, the authorization server issues a
 short-lived authorization code and redirects the user's browser to the client
 application's redirect URI with the code as a query parameter.
 
-The client application is supposed to exchange that code for an access token
-in a back-channel server-to-server request that includes the client secret.
+For a public client (a single-page app, a mobile app, or any client that cannot
+keep a secret), there is no client secret to prove that the party redeeming the
+code is the same party that started the flow. PKCE (Proof Key for Code Exchange,
+RFC 7636) fills that gap: the client generates a random `code_verifier` at the
+start of the flow, sends only its hash (`code_challenge`) to the authorization
+server, and presents the `code_verifier` itself at the token exchange. The
+authorization server issues a token only if the verifier hashes to the
+challenge it stored.
 
-This flaw disables state parameter binding on the authorization code. The
-authorization server does not verify that the state value in the token exchange
-request matches the state value issued at the start of the flow. This allows
-an attacker who can intercept the authorization code to exchange it themselves
-before the legitimate client does.
+This flaw disables PKCE verification at the token endpoint. The authorization
+server ignores the `code_verifier` and issues a token to anyone presenting a
+valid code. An attacker who intercepts the authorization code can redeem it
+directly, because the proof-of-possession check that would stop them is turned
+off.
 
 ---
 
 ## Why This Exists in Real Applications
 
-- State parameter validation is often treated as optional CSRF protection rather
-  than a core integrity control
-- Developers copy OAuth flow examples that omit state validation
-- Third-party OAuth libraries sometimes implement state as optional
-- Legacy integrations predate state parameter guidance in RFC 6749
+- PKCE was optional under RFC 6749 and only became mandatory for public clients
+  in the OAuth 2.1 draft and current security BCP
+- Older SDKs and copied flow examples omit PKCE entirely
+- Some servers accept a `code_challenge` at authorize time but never enforce the
+  `code_verifier` at token time, which is functionally identical to no PKCE
+- Confidential-client assumptions get carried over to public clients that cannot
+  actually protect a secret
 
 ---
 
@@ -42,85 +50,41 @@ before the legitimate client does.
 
 ### Steps
 
-1. Open the client app at `http://localhost:8000` and click **Login**
+1. Open the client app at `http://localhost:8000` and click **Login**. The
+   client generates a `code_verifier`, derives the `code_challenge`, and sends
+   the challenge on the authorize request.
 
-2. The client app redirects you to the auth server's authorization endpoint:
+2. The client app redirects you to the authorization endpoint (note the PKCE
+   parameters):
    ```
-   http://localhost:8001/authorize?response_type=code&client_id=flawedtoken-client&redirect_uri=http://localhost:8000/callback&state=SOMESTATE
+   http://localhost:8001/authorize?response_type=code&client_id=flawedtoken-client&redirect_uri=http://localhost:8000/callback&state=SOMESTATE&code_challenge=CHALLENGE&code_challenge_method=S256
    ```
 
-3. Approve the authorization request
+3. Approve the authorization request.
 
 4. The auth server redirects back with the authorization code:
    ```
    http://localhost:8000/callback?code=AUTH_CODE_HERE&state=SOMESTATE
    ```
 
-5. Intercept this redirect before it reaches the client app callback
+5. Intercept this redirect before it reaches the client app callback.
 
-6. Exchange the intercepted code yourself from a separate session:
-   ```bash
-   curl -X POST http://localhost:8001/token \
-     -d "grant_type=authorization_code" \
-     -d "code=AUTH_CODE_HERE" \
-     -d "redirect_uri=http://localhost:8000/callback" \
-     -d "client_id=flawedtoken-client" \
-     -d "client_secret=flawedtoken-secret"
+6. Redeem the intercepted code yourself, presenting the public `client_id` and
+   the code but no `code_verifier` (you never had it, it stayed in the victim's
+   client):
    ```
+   curl -X POST http://localhost:8001/token \
+     -d grant_type=authorization_code \
+     -d code=AUTH_CODE_HERE \
+     -d redirect_uri=http://localhost:8000/callback \
+     -d client_id=flawedtoken-client
+   ```
+   With the flaw on, the token endpoint skips PKCE verification and returns an
+   access token.
 
-7. The auth server issues an access token to your request. The legitimate
-   client's subsequent exchange attempt will fail — the code has already been used.
+### Confirming the fix
 
----
-
-## Fixed Behavior
-
-Set `FLAW_CODE_INTERCEPTION=off` and restart:
-
-```bash
-docker compose down && docker compose up
-```
-
-With the flaw disabled, the authorization server cryptographically binds the
-authorization code to the PKCE code challenge (or state value) provided at
-the start of the flow. The token exchange request must include the matching
-verifier. An intercepted code without the verifier cannot be exchanged.
-
----
-
-## Detection Guidance
-
-Signs of authorization code interception in your logs:
-
-- Token exchange requests arriving from a different IP than the authorization request
-- Failed token exchanges following a short window after a successful one (legitimate
-  client arriving after the attacker)
-- Authorization codes appearing in server-side logs or Referer headers
-- Unusual user-agent strings on token exchange requests vs authorization requests
-
----
-
-## Debug Endpoint — Lab Only
-
-FlawedToken ships a `/debug/flaws` endpoint on the auth server that exposes
-active flaw state, pending code counts, and live token counts:
-
-```
-http://localhost:8001/debug/flaws
-```
-
-This endpoint exists to support attack walkthroughs and confirm flaw state
-without reading environment variables directly. **It must not exist on any
-production authorization server.** Exposing internal token counts, flaw
-configuration, or server state to unauthenticated HTTP requests is itself a
-misconfiguration — one that aids enumeration and reconnaissance. Any real AS
-you build or configure should have no equivalent endpoint, or must gate it
-behind authenticated admin access with rate limiting and audit logging.
-
----
-
-## Further Reading
-
-- [RFC 6749 — The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
-- [RFC 7636 — PKCE for OAuth Public Clients](https://datatracker.ietf.org/doc/html/rfc7636)
-- cctbp.com — *OAuth Relay Attacks: How Authorization Codes Get Stolen* (link when published)
+Set `FLAW_CODE_INTERCEPTION=off` and repeat step 6. The token endpoint now
+rejects the request with `invalid_grant` / `pkce verification failed`, because
+the presented request has no verifier that hashes to the stored challenge. The
+legitimate client still succeeds, because it holds the matching `code_verifier`.

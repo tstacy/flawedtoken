@@ -1,0 +1,362 @@
+{
+  "clean_direct": [
+    {
+      "service": "auth-server",
+      "event": "authz.request.received",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_get"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.login.succeeded",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_post"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.code.issued",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.request.received",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "token.pkce.verified",
+      "data": {
+        "flaw_active": false,
+        "match": true,
+        "reason": "match",
+        "enforced": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.issued",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "userinfo.served",
+      "data": {}
+    }
+  ],
+  "flaw02": [
+    {
+      "service": "auth-server",
+      "event": "authz.request.received",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": true,
+        "in_allowlist": false,
+        "accepted": true,
+        "phase": "authorize_get"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.login.succeeded",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": true,
+        "in_allowlist": false,
+        "accepted": true,
+        "phase": "authorize_post"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.code.issued",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "finding.flaw02.redirect_uri_manipulation",
+      "data": {
+        "severity": "high"
+      }
+    }
+  ],
+  "flaw01": [
+    {
+      "service": "auth-server",
+      "event": "authz.request.received",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_get"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.login.succeeded",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_post"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.code.issued",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.request.received",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "token.pkce.verified",
+      "data": {
+        "flaw_active": true,
+        "match": false,
+        "reason": "verifier_missing",
+        "enforced": false
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.issued",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "finding.flaw01.code_interception_replay",
+      "data": {
+        "severity": "high"
+      }
+    }
+  ],
+  "secure_control": [
+    {
+      "service": "auth-server",
+      "event": "authz.request.received",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_get"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.login.succeeded",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_post"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.code.issued",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.request.received",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "token.pkce.verified",
+      "data": {
+        "flaw_active": false,
+        "match": false,
+        "reason": "verifier_missing",
+        "enforced": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.rejected",
+      "data": {}
+    }
+  ],
+  "clean_e2e": [
+    {
+      "service": "auth-server",
+      "event": "authz.request.received",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_get"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.login.succeeded",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.redirect_uri.validated",
+      "data": {
+        "flaw_active": false,
+        "in_allowlist": true,
+        "accepted": true,
+        "phase": "authorize_post"
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "authz.code.issued",
+      "data": {
+        "code_challenge_present": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.request.received",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "token.pkce.verified",
+      "data": {
+        "flaw_active": false,
+        "match": true,
+        "reason": "match",
+        "enforced": true
+      }
+    },
+    {
+      "service": "auth-server",
+      "event": "token.issued",
+      "data": {}
+    },
+    {
+      "service": "auth-server",
+      "event": "userinfo.served",
+      "data": {}
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.login.initiated",
+      "data": {}
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.callback.received",
+      "data": {
+        "state_match": true
+      }
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.token.requested",
+      "data": {}
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.token.received",
+      "data": {}
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.session.established",
+      "data": {}
+    }
+  ],
+  "client_token_failure": [
+    {
+      "service": "client-app",
+      "event": "oauth.login.initiated",
+      "data": {}
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.callback.received",
+      "data": {
+        "state_match": true
+      }
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.token.requested",
+      "data": {}
+    },
+    {
+      "service": "client-app",
+      "event": "oauth.token.failed",
+      "data": {}
+    }
+  ]
+}
