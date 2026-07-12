@@ -13,8 +13,8 @@ controlled environment before running them against authorized targets.
 
 FlawedToken ships two services:
 
-- **auth-server** — a minimal OAuth 2.0 Authorization Server with toggleable flaws
-- **client-app** — a relying party client application that trusts it incorrectly
+- **auth-server**: a minimal OAuth 2.0 Authorization Server with toggleable flaws
+- **client-app**: a relying party client application that trusts it incorrectly
 
 Both services run together via Docker Compose. One command and the full
 environment is up.
@@ -38,13 +38,13 @@ docker compose up
 
 ---
 
-## Active Flaws (Phase 2)
+## Active Flaws
 
 Each flaw is toggled via environment variable in your `.env` file.
 
 | Flaw | Variable | Default | Description |
 |---|---|---|---|
-| Auth Code Interception | `FLAW_CODE_INTERCEPTION` | `on` | Authorization server does not bind auth codes to client state, enabling interception and replay. |
+| Auth Code Interception | `FLAW_CODE_INTERCEPTION` | `on` | Authorization server does not enforce PKCE at the token endpoint, so an intercepted authorization code can be replayed by any party that presents it. |
 | Redirect URI Validation | `FLAW_REDIRECT_URI_VALIDATION` | `on` | Redirect URI allow-list validation is disabled. Any URI is accepted, including open redirects and subdomain variants. |
 
 Set a variable to `off` to enable the correct, secure behavior. This lets you
@@ -62,8 +62,8 @@ FLAW_REDIRECT_URI_VALIDATION=on
 
 Step-by-step walkthroughs for each flaw live in `/docs`:
 
-- [Flaw 01 — Auth Code Interception](docs/flaw-01-auth-code-interception.md)
-- [Flaw 02 — Redirect URI Manipulation](docs/flaw-02-redirect-uri-manipulation.md)
+- [Flaw 01: Auth Code Interception](docs/flaw-01-auth-code-interception.md)
+- [Flaw 02: Redirect URI Manipulation](docs/flaw-02-redirect-uri-manipulation.md)
 
 Each doc covers:
 - What the misconfiguration is
@@ -76,26 +76,13 @@ Each doc covers:
 
 ## Pairing with ShroudCloud
 
-FlawedToken is the demo target for [ShroudCloud](https://shroudcloud.com) —
+FlawedToken is the demo target for [ShroudCloud](https://shroudcloud.com),
 purpose-built OAuth attack infrastructure for authorized red team operations.
 
 The `docs/` walkthroughs show the manual attack path. ShroudCloud automates
-the same flows against any authorized target, with configurable IdP and RP
-components and full session capture.
+these flows against authorized targets.
 
-ShroudCloud is currently in private beta. [Join the waitlist](https://shroudcloud.com/#access).
-
----
-
-## Roadmap
-
-FlawedToken ships in phases alongside ShroudCloud.
-
-| Phase | Flaws |
-|---|---|
-| Phase 2 (current) | Auth code interception, redirect URI manipulation |
-| Phase 3 | Token relay, PKCE downgrade, SAML assertion replay |
-| Phase 4+ | MFA bypass scenarios, refresh token abuse, cross-tenant OIDC |
+ShroudCloud is currently in private development. [Join the waitlist](https://shroudcloud.com/#access).
 
 ---
 
@@ -122,11 +109,11 @@ FlawedToken is for use in authorized testing environments only.
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT, see [LICENSE](LICENSE)
 
 ---
 
 ## Related
 
-- [ShroudCloud](https://shroudcloud.com) — OAuth attack infrastructure for authorized red team operations
-- [cctbp.com](https://cctbp.com) — Security research blog covering auth attack techniques in depth
+- [ShroudCloud](https://shroudcloud.com), OAuth attack infrastructure for authorized red team operations
+- [cctbp.com](https://cctbp.com), Security research blog covering auth attack techniques in depth
