@@ -64,12 +64,11 @@ paths not registered for the client.
 
 5. Exchange the code:
    ```bash
-   curl -X POST http://localhost:8001/token \
-     -d "grant_type=authorization_code" \
-     -d "code=AUTH_CODE_HERE" \
-     -d "redirect_uri=http://localhost:9000/capture" \
-     -d "client_id=flawedtoken-client" \
-     -d "client_secret=flawedtoken-secret"
+curl -X POST http://localhost:8001/token \
+  -d "grant_type=authorization_code" \
+  -d "code=AUTH_CODE_HERE" \
+  -d "redirect_uri=http://localhost:9000/capture" \
+  -d "client_id=flawedtoken-client"
    ```
 
 ### Attack 2 — Subdomain Confusion
