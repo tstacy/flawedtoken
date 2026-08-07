@@ -121,5 +121,5 @@ MIT, see [LICENSE](LICENSE)
 
 ## Related
 
-- [ShroudCloud](https://shroudcloud.com), OAuth attack infrastructure for authorized red team operations
+- [ShroudCloud](https://shroudcloud.com), PII and secret redaction engine for documents, logs, and AI pipelines
 - [cctbp.com](https://cctbp.com), Security research blog covering auth attack techniques in depth
