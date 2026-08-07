@@ -76,13 +76,19 @@ Each doc covers:
 
 ## Pairing with ShroudCloud
 
-FlawedToken is the demo target for [ShroudCloud](https://shroudcloud.com),
-purpose-built OAuth attack infrastructure for authorized red team operations.
+FlawedToken is the open lab behind the research on [cctbp.com](https://cctbp.com):
+every attack chain here is reproduced against it, documented, and toggleable,
+so you can verify the techniques yourself before taking them anywhere.
 
-The `docs/` walkthroughs show the manual attack path. ShroudCloud automates
-these flows against authorized targets.
+[ShroudCloud](https://shroudcloud.com) is a separate product by the same
+researcher — a detection engine for PII and secrets in documents, logs, and
+AI pipelines. It's built on the same understanding of where identity
+artifacts actually leak: the JWTs, OAuth codes, and session tokens that
+FlawedToken teaches you to find are exactly what ShroudCloud learns to redact.
 
-ShroudCloud is currently in private development. [Join the waitlist](https://shroudcloud.com/#access).
+FlawedToken stays free and open source — the lab lives on independent of the
+product, always. ShroudCloud is currently in private development.
+[Join the waitlist](https://shroudcloud.com/#waitlist).
 
 ---
 
